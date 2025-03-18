@@ -62,18 +62,18 @@
   }
 
   .leftColumn {
-    height: 50vh;
+    height: 70vh;
   }
 
   .rightColumn {
-    height: 50vh;
+    height: 30vh;
   }
 
   .topBlock {
-    height: 40%;
+    height: 30%;
   }
 
   .cardContainer {
-    height: 60%;
+    height: 70%;
   }
 }
