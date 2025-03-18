@@ -22,7 +22,7 @@ const Cards = ({ onCardClick }: CardsProps) => {
 
   const handleClick = () => {
     const now = Date.now();
-    if (now - lastClickTime < 500) return;
+    if (now - lastClickTime < 1000) return;
     setLastClickTime(now);
 
     const newSuit = suits[Math.floor(Math.random() * suits.length)];
