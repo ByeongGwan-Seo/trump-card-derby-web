@@ -47,7 +47,6 @@ const BackwardColumn = ({
         const canReveal = suits.every(
           (suit) => cardPositions[suit] < reversedRowIndex
         );
-        const alreadyRevealed = !canReveal;
 
         return (
           <div
