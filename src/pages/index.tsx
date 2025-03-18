@@ -5,19 +5,24 @@ import Cards from "@/components/cards/Cards";
 import styles from "@/styles/Home.module.css";
 import useLocale from "@/hooks/useLocale";
 import Commentary from "@/components/commentary/Commentary";
+import GameBoard from "@/components/game-board/GameBoard";
 
 export default function Home() {
   const [language, setLanguage] = useState("ko");
   const translations = useLocale(language);
   const [comments, setComments] = useState<string[]>([]);
   const [isFirstClick, setIsFirstClick] = useState(true);
+  const [drawnCard, setDrawnCard] = useState<string | null>(null);
+  const [cardDrawCount, setCardDrawCount] = useState(0);
 
   useEffect(() => {
     setIsFirstClick(true);
     setComments([]);
+    setDrawnCard(null);
+    setCardDrawCount(0);
   }, [translations]);
 
-  const handleCardClick = () => {
+  const handleCardClick = (suit: string) => {
     let newComment = "";
 
     if (isFirstClick) {
@@ -40,6 +45,8 @@ export default function Home() {
     }
 
     setComments((prev) => [...prev, newComment]);
+    setDrawnCard(suit);
+    setCardDrawCount((prev) => prev + 1);
   };
 
   return (
@@ -61,7 +68,12 @@ export default function Home() {
               {translations.subtitle || "카드를 클릭하면 게임이 시작됩니다."}
             </h2>
             <div className={styles.gridContainer}>
-              <div className={styles.leftColumn}></div>
+              <div className={styles.leftColumn}>
+                <GameBoard
+                  drawnCard={drawnCard}
+                  cardDrawCount={cardDrawCount}
+                />
+              </div>
               <div className={styles.rightColumn}>
                 <div className={styles.topBlock}>
                   <Commentary

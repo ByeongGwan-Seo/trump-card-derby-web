@@ -4,26 +4,33 @@ import styles from "@/styles/Card.module.css";
 
 const suits: string[] = ["1", "2", "3", "4"];
 const suitImages: Record<string, string> = {
-  "1": "/images/hearts.svg",
-  "2": "/images/spades.svg",
+  "1": "/images/clubs.svg",
+  "2": "/images/hearts.svg",
   "3": "/images/diamonds.svg",
-  "4": "/images/clubs.svg",
+  "4": "/images/spades.svg",
 };
 
 interface CardsProps {
-  onCardClick: (isFirstClick: boolean) => void;
+  onCardClick: (suit: string, isFirstClick: boolean) => void;
 }
 
 const Cards = ({ onCardClick }: CardsProps) => {
   const [rotation, setRotation] = useState(0);
   const [randomSuit, setRandomSuit] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [lastClickTime, setLastClickTime] = useState(0);
 
   const handleClick = () => {
+    const now = Date.now();
+    if (now - lastClickTime < 500) return;
+    setLastClickTime(now);
+
+    const newSuit = suits[Math.floor(Math.random() * suits.length)];
+
     if (randomSuit === null) {
-      setRandomSuit(suits[Math.floor(Math.random() * suits.length)]);
+      setRandomSuit(newSuit);
       setRotation(180);
-      onCardClick(true);
+      onCardClick(newSuit, true);
       return;
     }
 
@@ -31,11 +38,12 @@ const Cards = ({ onCardClick }: CardsProps) => {
     setRotation((prev) => prev + 180);
 
     setTimeout(() => {
-      setRandomSuit(suits[Math.floor(Math.random() * suits.length)]);
+      setRandomSuit(newSuit);
       setIsTransitioning(false);
+      onCardClick(newSuit, false);
     }, 500);
 
-    onCardClick(false);
+    console.log(newSuit);
   };
 
   return (
