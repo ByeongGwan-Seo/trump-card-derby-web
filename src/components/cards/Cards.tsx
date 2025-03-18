@@ -11,7 +11,7 @@ const suitImages: Record<string, string> = {
 };
 
 interface CardsProps {
-  onCardClick: () => void;
+  onCardClick: (isFirstClick: boolean) => void;
 }
 
 const Cards = ({ onCardClick }: CardsProps) => {
@@ -23,6 +23,7 @@ const Cards = ({ onCardClick }: CardsProps) => {
     if (randomSuit === null) {
       setRandomSuit(suits[Math.floor(Math.random() * suits.length)]);
       setRotation(180);
+      onCardClick(true);
       return;
     }
 
@@ -34,7 +35,7 @@ const Cards = ({ onCardClick }: CardsProps) => {
       setIsTransitioning(false);
     }, 500);
 
-    onCardClick();
+    onCardClick(false);
   };
 
   return (

@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/header/Header";
 import Cards from "@/components/cards/Cards";
 import styles from "@/styles/Home.module.css";
@@ -10,16 +10,34 @@ export default function Home() {
   const [language, setLanguage] = useState("ko");
   const translations = useLocale(language);
   const [comments, setComments] = useState<string[]>([]);
+  const [isFirstClick, setIsFirstClick] = useState(true);
 
-  const handleCardClick = () => {
-    const commentsList = [
-      translations.randomComment1,
-      translations.randomComment2,
-      translations.randomComment3,
-      translations.randomComment4,
-    ];
-    const newComment =
-      commentsList[Math.floor(Math.random() * commentsList.length)];
+  useEffect(() => {
+    setIsFirstClick(true);
+    setComments([]);
+  }, [translations]);
+
+  const handleCardClick = (firstClick: boolean) => {
+    let newComment = "";
+
+    if (firstClick) {
+      const startComments = [
+        translations.startComment1,
+        translations.startComment2,
+      ];
+      newComment =
+        startComments[Math.floor(Math.random() * startComments.length)];
+      setIsFirstClick(false);
+    } else {
+      const commentsList = [
+        translations.randomComment1,
+        translations.randomComment2,
+        translations.randomComment3,
+        translations.randomComment4,
+      ];
+      newComment =
+        commentsList[Math.floor(Math.random() * commentsList.length)];
+    }
 
     setComments((prev) => [...prev, newComment]);
   };
@@ -35,7 +53,7 @@ export default function Home() {
 
       <div className={styles.page}>
         <div className={styles.contentContainer}>
-          <Header setLanguage={setLanguage} />
+          <Header setLanguage={setLanguage} setComments={setComments} />
 
           <main className={styles.main}>
             <h1>{translations.title || "failed to read"}</h1>
