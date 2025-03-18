@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "@/styles/BackwardColumn.module.css";
 import Image from "next/image";
 
@@ -23,10 +23,15 @@ const BackwardColumn = ({
     Record<number, string | null>
   >({});
 
+  useEffect(() => {
+    console.log("현재 카드 위치:", cardPositions);
+  }, [cardPositions]);
+
   const handleCardClick = (rowIndex: number) => {
     if (revealedCards[rowIndex]) return;
 
     const canReveal = suits.every((suit) => cardPositions[suit] < rowIndex);
+    console.log(`Row ${rowIndex} canReveal 상태:`, canReveal);
 
     if (canReveal) {
       const drawnSuit = suits[Math.floor(Math.random() * suits.length)];
@@ -39,21 +44,34 @@ const BackwardColumn = ({
     <div className={styles.column}>
       {Array.from({ length: 8 }).map((_, rowIndex) => {
         const reversedRowIndex = 7 - rowIndex;
+        const canReveal = suits.every(
+          (suit) => cardPositions[suit] < reversedRowIndex
+        );
+        const alreadyRevealed = !canReveal;
+
         return (
           <div
             key={reversedRowIndex}
-            className={styles.cell}
+            className={`${styles.cell} ${canReveal ? "pulse" : ""}`}
             onClick={() => handleCardClick(reversedRowIndex)}
           >
-            {reversedRowIndex === 0 ? null : revealedCards[reversedRowIndex] ? (
-              <Image
-                src={suitImages[revealedCards[reversedRowIndex]!]}
-                alt="Revealed Card"
-                width={80}
-                height={60}
-              />
-            ) : (
-              <div className={styles.cardBack} />
+            {reversedRowIndex === 0 ? null : (
+              <div className={styles.cardBack}>
+                <Image
+                  src={
+                    revealedCards[reversedRowIndex]
+                      ? suitImages[revealedCards[reversedRowIndex]!]
+                      : "/images/card_back.svg"
+                  }
+                  alt="Card"
+                  width={80}
+                  height={60}
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "100%",
+                  }}
+                />
+              </div>
             )}
           </div>
         );
