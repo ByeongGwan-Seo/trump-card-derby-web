@@ -18,8 +18,13 @@ const Cards = ({ onCardClick }: CardsProps) => {
   const [rotation, setRotation] = useState(0);
   const [randomSuit, setRandomSuit] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [lastClickTime, setLastClickTime] = useState(0);
 
   const handleClick = () => {
+    const now = Date.now();
+    if (now - lastClickTime < 500) return;
+    setLastClickTime(now);
+
     const newSuit = suits[Math.floor(Math.random() * suits.length)];
 
     if (randomSuit === null) {
@@ -35,9 +40,9 @@ const Cards = ({ onCardClick }: CardsProps) => {
     setTimeout(() => {
       setRandomSuit(newSuit);
       setIsTransitioning(false);
+      onCardClick(newSuit, false);
     }, 500);
 
-    onCardClick(newSuit, false);
     console.log(newSuit);
   };
 

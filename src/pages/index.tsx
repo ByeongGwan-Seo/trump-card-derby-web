@@ -22,7 +22,7 @@ export default function Home() {
     setCardDrawCount(0);
   }, [translations]);
 
-  const handleCardClick = (suit: string, isFirstClick: boolean) => {
+  const handleCardClick = (suit: string) => {
     let newComment = "";
 
     if (isFirstClick) {
