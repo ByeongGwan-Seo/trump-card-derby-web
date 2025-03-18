@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "@/styles/GameBoard.module.css";
 import Image from "next/image";
+import BackwardColumn from "./BackwardColumn";
 
 const suits = ["1", "2", "3", "4"];
 const suitImages: Record<string, string> = {
@@ -36,24 +37,38 @@ const GameBoard = ({ drawnCard, cardDrawCount }: GameBoardProps) => {
     });
   }, [drawnCard, cardDrawCount]);
 
+  const handleBackwardReveal = (suit: string) => {
+    setPositions((prev) => ({
+      ...prev,
+      [suit]: Math.min(prev[suit] + 1, 7),
+    }));
+  };
+
   return (
-    <div className={styles.board}>
-      {Array.from({ length: 8 }).map((_, rowIndex) => (
-        <div key={rowIndex} className={styles.row}>
-          {suits.map((suit) => (
-            <div key={suit} className={styles.cell}>
-              {positions[suit] === rowIndex && (
-                <Image
-                  src={suitImages[suit]}
-                  alt={suit}
-                  width={80}
-                  height={60}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      ))}
+    <div className={styles.container}>
+      <div className={styles.board}>
+        {Array.from({ length: 8 }).map((_, rowIndex) => (
+          <div key={rowIndex} className={styles.row}>
+            {suits.map((suit) => (
+              <div key={suit} className={styles.cell}>
+                {positions[suit] === rowIndex && (
+                  <Image
+                    src={suitImages[suit]}
+                    alt={suit}
+                    width={80}
+                    height={60}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <BackwardColumn
+        onCardReveal={handleBackwardReveal}
+        cardPositions={positions}
+      />
     </div>
   );
 };
