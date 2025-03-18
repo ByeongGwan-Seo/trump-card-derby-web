@@ -17,10 +17,10 @@ export default function Home() {
     setComments([]);
   }, [translations]);
 
-  const handleCardClick = (firstClick: boolean) => {
+  const handleCardClick = () => {
     let newComment = "";
 
-    if (firstClick) {
+    if (isFirstClick) {
       const startComments = [
         translations.startComment1,
         translations.startComment2,
